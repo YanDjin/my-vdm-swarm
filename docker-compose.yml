@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  api:
+    container_name: api
+    build: ./api
+    image: api
+    command: npm run dev
+    web:
+      environment:
+        - PORT=8000
+    volumes:
+      - ./api:/app
+    ports:
+      - 8000:8000
+
+  front:
+    container_name: front
+    build: ./front
+    image: front
+    command: npm start
+    volumes:
+      - ./front:/app
+    ports:
+      - 8080:8080
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - CI=true
+
+  database:
+    container_name: database
+    image: mongo:4-bionic
+    ports:
+      - 27017-27019:27017-27019
+
+  proxy:
+    container_name: proxy
+    image: nginx:1.17
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./proxy/config:/etc/nginx/conf.d
