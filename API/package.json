@@ -1,23 +1,27 @@
 {
-  "name": "vdm",
+  "name": "api",
   "version": "1.0.0",
-  "description": "vdm escape game etna project",
+  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev ./src/server.ts --pretty"
+    "start": "nodemon ./src/server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "mongoose": "^5.9.20",
-    "ts-node-dev": "^1.0.0-pre.49"
+    "lodash": "^4.17.19",
+    "mongoose": "^5.9.22"
   },
   "devDependencies": {
-    "@types/express": "^4.17.6",
-    "@types/node": "^14.0.14",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.5"
+    "@types/body-parser": "^1.19.0",
+    "@types/express": "^4.17.7",
+    "@types/hapi__joi": "^17.1.4",
+    "@types/lodash": "^4.14.157",
+    "@types/mongoose": "^5.7.31",
+    "nodemon": "^2.0.4"
   }
 }

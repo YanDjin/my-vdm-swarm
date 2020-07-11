@@ -1,43 +1,47 @@
 version: "3"
 
 services:
-  api:
-    container_name: api
+  vdm-api:
+    container_name: vdm-api
     build: ./api
-    image: api
-    command: npm run dev
-    web:
-      environment:
-        - PORT=8000
+    image: vdm-api
+    command: npm start
     volumes:
       - ./api:/app
+      - /app/node_modules
     ports:
       - 8000:8000
+    depends_on:
+      - vdm-database
 
-  front:
-    container_name: front
+  vdm-front:
+    container_name: vdm-front
     build: ./front
-    image: front
+    image: vdm-front
     command: npm start
     volumes:
       - ./front:/app
+      - /app/node_modules
     ports:
-      - 8080:8080
+      - 8080:3000
     environment:
       - CHOKIDAR_USEPOLLING=true
       - CI=true
 
-  database:
-    container_name: database
+  vdm-database:
+    container_name: vdm-database
     image: mongo:4-bionic
     ports:
       - 27017-27019:27017-27019
 
-  proxy:
-    container_name: proxy
+  vdm-proxy:
+    container_name: vdm-proxy
     image: nginx:1.17
     ports:
       - 80:80
       - 443:443
     volumes:
       - ./proxy/config:/etc/nginx/conf.d
+    depends_on:
+      - vdm-api
+      - vdm-front

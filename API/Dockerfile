@@ -2,10 +2,12 @@ FROM node:12-buster-slim
 
 WORKDIR /app
 
+COPY package*.json ./
+
 RUN npm install
 
-COPY . ./
+COPY . .
 
-EXPOSE 3001
+EXPOSE 8000
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

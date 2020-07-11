@@ -1,0 +1,12 @@
+{
+    "name": "yan/generateur-irl-party",
+    "require": {
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "authors": [
+        {
+            "name": "YanDjin",
+            "email": "46947921+YanDjin@users.noreply.github.com"
+        }
+    ]
+}
