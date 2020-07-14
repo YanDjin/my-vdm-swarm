@@ -1,5 +1,5 @@
 <template>
-    <Anonymous>
+    <Authenticated>
         <v-card
           class="mx-auto pa-3 my-auto"
           max-width="600"
@@ -44,16 +44,17 @@
             </v-form>
         </v-card>
 
-    </Anonymous>
+    </Authenticated>
 </template>
 
 <script>
-    import Anonymous from "../templates/Anonymous";
+    import Authenticated from "../templates/Authenticated";
     import request from "../services/request";
+
     export default {
         name: "Login",
         components: {
-            Anonymous
+          Authenticated
         },
       data() {
         return {
@@ -81,7 +82,7 @@
           if (this.formValid) {
             this.request('authenticate', this.formData)
               .then(res => {
-                this.$store.commit('saveToken', res.data.token);
+                this.commit('saveToken', res.data.token);
                 console.log(res);
               }).catch(err => {
               console.error(err);

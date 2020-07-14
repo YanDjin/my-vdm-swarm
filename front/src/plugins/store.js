@@ -1,10 +1,13 @@
 const storeObject = {
     state: {
-        count: 0
+        token: null
     },
     mutations: {
-        increment (state) {
-            state.count++
+        saveToken (state, token) {
+            state.token = token;
+        },
+        resetToken(state) {
+            state.token = null;
         }
     }
 };

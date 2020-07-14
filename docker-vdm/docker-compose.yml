@@ -24,15 +24,15 @@ services:
       - /app/node_modules
     ports:
       - 8080:3000
-#    environment:
-#      - CHOKIDAR_USEPOLLING=true
-#      - CI=true
+  #    environment:
+  #      - CHOKIDAR_USEPOLLING=true
+  #      - CI=true
 
-#  vdm-database:
-#    container_name: vdm-database
-#    image: mongo:4-bionic
-#    ports:
-#      - 27017-27019:27017-27019
+  #  vdm-database:
+  #    container_name: vdm-database
+  #    image: mongo:4-bionic
+  #    ports:
+  #      - 27017-27019:27017-27019
 
   vdm-proxy:
     container_name: vdm-proxy
@@ -46,146 +46,174 @@ services:
       - vdm-api
       - vdm-front
 
-# Database --v-- :
+  # Database --v-- :
   #  Config servers :
   vdm-database-configServer1:
     container_name: vdm-database-configServer1
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: mongod --configsvr --replSet configServers --port 27017 --dbpath /data/db
     #    ports:
     #      - 40001:27017
     volumes:
       - configServer1:/data/db
       - ./database/config/config-server:/docker-entrypoint-initdb.d/
+      - ./database/backups/configServer1:/backup
     depends_on:
       - vdm-database-configServer2
       - vdm-database-configServer3
 
   vdm-database-configServer2:
     container_name: vdm-database-configServer2
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: mongod --configsvr --replSet configServers --port 27017 --dbpath /data/db
     #    ports:
     #      - 40002:27017
     volumes:
       - configServer2:/data/db
+      - ./database/backups/configServer2:/backup
 
   vdm-database-configServer3:
     container_name: vdm-database-configServer3
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: mongod --configsvr --replSet configServers --port 27017 --dbpath /data/db
     ports:
       - 40003:27017
     volumes:
       - configServer3:/data/db
+      - ./database/backups/configServer3:/backup
 
 
   #  Shards :
   #  Shard 1 :
   vdm-database-shard1server1:
     container_name: vdm-database-shard1server1
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
+    privileged: true
     command: mongod --shardsvr --replSet shard1servers --port 27017 --dbpath /data/db
     #    ports:
     #      - 50001:27017
     volumes:
       - shard1server1:/data/db
       - ./database/config/shard-1:/docker-entrypoint-initdb.d/
+      - ./database/backups/shard1server1:/backup
     depends_on:
       - vdm-database-shard1server2
       - vdm-database-shard1server3
 
   vdm-database-shard1server2:
     container_name: vdm-database-shard1server2
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: mongod --shardsvr --replSet shard1servers --port 27017 --dbpath /data/db
     #    ports:
     #      - 50002:27017
     volumes:
       - shard1server2:/data/db
+      - ./database/backups/shard1server2:/backup
 
   vdm-database-shard1server3:
     container_name: vdm-database-shard1server3
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: mongod --shardsvr --replSet shard1servers --port 27017 --dbpath /data/db
     #    ports:
     #      - 50003:27017
     volumes:
       - shard1server3:/data/db
+      - ./database/backups/shard1server3:/backup
 
   #  Shard 2 :
   vdm-database-shard2server1:
     container_name: vdm-database-shard2server1
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: mongod --shardsvr --replSet shard2servers --port 27017 --dbpath /data/db
     #    ports:
     #      - 50101:27017
     volumes:
       - shard2server1:/data/db
       - ./database/config/shard-2:/docker-entrypoint-initdb.d/
+      - ./database/backups/shard2server1:/backup
     depends_on:
       - vdm-database-shard2server2
       - vdm-database-shard2server3
 
   vdm-database-shard2server2:
     container_name: vdm-database-shard2server2
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: mongod --shardsvr --replSet shard2servers --port 27017 --dbpath /data/db
     #    ports:
     #      - 50102:27017
     volumes:
       - shard2server2:/data/db
+      - ./database/backups/shard2server2:/backup
 
   vdm-database-shard2server3:
     container_name: vdm-database-shard2server3
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: mongod --shardsvr --replSet shard2servers --port 27017 --dbpath /data/db
     #    ports:
     #      - 50103:27017
     volumes:
       - shard2server3:/data/db
+      - ./database/backups/shard2server3:/backup
 
   #  Shard 3 :
   vdm-database-shard3server1:
     container_name: vdm-database-shard3server1
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: mongod --shardsvr --replSet shard3servers --port 27017 --dbpath /data/db
     #    ports:
     #      - 50201:27017
     volumes:
       - shard3server1:/data/db
       - ./database/config/shard-3:/docker-entrypoint-initdb.d/
+      - ./database/backups/shard3server1:/backup
     depends_on:
       - vdm-database-shard3server2
       - vdm-database-shard3server3
 
   vdm-database-shard3server2:
     container_name: vdm-database-shard3server2
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: mongod --shardsvr --replSet shard3servers --port 27017 --dbpath /data/db
     #    ports:
     #      - 50202:27017
     volumes:
       - shard3server2:/data/db
+      - ./database/backups/shard3server2:/backup
 
   vdm-database-shard3server3:
     container_name: vdm-database-shard3server3
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: mongod --shardsvr --replSet shard3servers --port 27017 --dbpath /data/db
     #    ports:
     #      - 50203:27017
     volumes:
       - shard3server3:/data/db
+      - ./database/backups/shard3server3:/backup
 
   #  Mongos :
   vdm-database-mongos:
     container_name: vdm-database-mongos
-    image: mongo
+    build: ./database
+    image: mongo-with-cron
     command: sh -c "sleep 30 && mongos --configdb configServers/vdm-database-configServer1:27017,vdm-database-configServer2:27017,vdm-database-configServer3:27017 --bind_ip 0.0.0.0 --port 27017"
     ports:
       - 27017:27017
     volumes:
       - ./database/config/mongos:/docker-entrypoint-initdb.d/
+      - ./database/backups/mongos:/backup
+
     depends_on:
       - vdm-database-configServer1
       - vdm-database-configServer2
@@ -199,6 +227,16 @@ services:
       - vdm-database-shard3server1
       - vdm-database-shard3server2
       - vdm-database-shard3server3
+
+#  #  Percona Backup server
+#  vdm-database-backup:
+#    container_name: vdm-database-backup
+#    image: percona/percona-backup-mongodb
+#    environment:
+#      - PBM_MONGODB_URI=mongodb://vdm-database-mongos:27017/vdm
+#    volumes:
+#      - ./database/backups:/backups
+
 
 volumes:
   configServer1:

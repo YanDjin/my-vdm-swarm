@@ -9,6 +9,7 @@ require('dotenv').config(); // register env variables in the system
 const ticketRoute = require("./routes/ticket");
 const registerRoute = require("./routes/register");
 const authenticateRoute = require("./routes/authenticate");
+const authorizationMiddleware = require('./middleware/authorization');
 
 const app = express();
 
@@ -34,6 +35,10 @@ app.get("/", (req, res) => {
 app.use("/ticket", ticketRoute);
 app.use("/register", registerRoute);
 app.use("/authenticate", authenticateRoute);
+
+app.use(authorizationMiddleware());
+
+app.use("/lalala", authenticateRoute);
 
 app.listen(8000, () => {
     console.log("api is running on port 8000");

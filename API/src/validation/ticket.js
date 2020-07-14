@@ -9,7 +9,7 @@ const ticketSchema = Joi.object({
         Civilite: Joi.string().valid(...Object.values(civility)).required(),
         Nom: Joi.string().min(3).max(255).required(),
         Prenom: Joi.string().min(3).max(255).required(),
-        Age: Joi.number().integer().min(16).max(120).required(),
+        Age: Joi.number().integer().min(12).max(120).required(),
         Email: Joi.string().email().required()
     },
     Game: {
@@ -24,7 +24,7 @@ const ticketSchema = Joi.object({
               Civilite: Joi.string().valid(...Object.values(civility)).required(),
               Nom: Joi.string().min(3).max(255).required(),
               Prenom: Joi.string().min(3).max(255).required(),
-              Age: Joi.number().integer().min(16).max(120).required()
+              Age: Joi.number().integer().min(1).max(120).required()
           },
           Tarif: Joi.string().min(3).max(255).required()
       }

@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <v-app>
     <router-view></router-view>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -9,17 +9,6 @@ export default {
   name: 'App',
   components: {
     // Authenticated,
-  },
-  computed: {
-    token() {
-      return '';
-    }
   }
 }
 </script>
-
-<style>
-#app {
-  margin-top: 30px;
-}
-</style>

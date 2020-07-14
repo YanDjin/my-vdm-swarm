@@ -23,9 +23,9 @@ router.post("/", validationMiddleware(validationSchema), transformationMiddlewar
                     const user = new UserModel({
                         ...req.body
                     });
-                    user.save().then(res => {
+                    user.save().then(dbres => {
                         res.json({message: 'user registered successfully'});
-                    }).catch(err => {
+                    }).catch(dberr => {
                         res.status(500).json({message: "internal server error"});
                     });
                 }

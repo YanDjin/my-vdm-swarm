@@ -21,7 +21,7 @@ router.post("/", validationMiddleware(validationSchema), (req, res) => {
                         email: foundUser.Email,
                         name: foundUser.Nom,
                         lastname: foundUser.Prenom
-                    }, process.env.NODE_JWT_SECRET, { expiresIn: process.env.NODE_JWT_DURATION || (60 * 60) })
+                    }, process.env.NODE_JWT_SECRET, { expiresIn: parseInt(process.env.NODE_JWT_DURATION) || (60 * 60) });
                     res.json({message: 'user authenticated successfully', token});
                 } else {
                     res.status(400).json({message: 'user cannot be authenticated'});

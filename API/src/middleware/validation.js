@@ -1,4 +1,5 @@
 const Joi = require("@hapi/joi");
+
 const validationMiddleware = (schema) => {
     return (req, res, next) => {
         const {error} = schema.validate(req.body);
@@ -10,7 +11,7 @@ const validationMiddleware = (schema) => {
             const {details} = error;
             const message = details.map(i => i.message).join(',');
 
-            res.status(422).json({error: message})
+            res.status(422).json({error: message, message: 'error in form'})
         }
     }
 }

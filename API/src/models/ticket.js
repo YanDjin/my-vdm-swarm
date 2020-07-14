@@ -15,9 +15,9 @@ const schema = new mongoose.Schema({
         Email: {type: String, required: true}
     },
     Game: {
-        Nom: String,
-        Jour: Date,
-        Horaire: String,
+        Nom: {type: String, required: true},
+        Jour: {type: Date, required: true},
+        Horaire: {type: String, required: true},
         VR: {type: Number, required: true, integer: true},
     },
     Reservation: [

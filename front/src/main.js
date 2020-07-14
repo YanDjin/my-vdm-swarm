@@ -1,21 +1,24 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
-import Toast from "vue-toastification";
+import Toast, {POSITION} from "vue-toastification";
 import "vue-toastification/dist/index.css"; // toast css
-import Buefy from 'buefy'
-import 'buefy/dist/buefy.css' // buefy css
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css'; // loader css
 
 import storeObject from './plugins/store';
 import routes from './plugins/routes';
 
 import App from './App.vue'
+import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false
 Vue.use(Vuex);
 Vue.use(VueRouter);
-Vue.use(Toast);
-Vue.use(Buefy);
+Vue.use(Toast, {
+  position: POSITION.BOTTOM_LEFT
+});
+Vue.use(Loading);
 
 const store = new Vuex.Store(storeObject);
 
@@ -28,5 +31,6 @@ document.title = 'VDM';
 new Vue({
   store,
   router,
-  render: h => h(App),
+  vuetify,
+  render: h => h(App)
 }).$mount('#app')
