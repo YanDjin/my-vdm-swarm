@@ -58,7 +58,7 @@ while (true) {
     // echo(json_encode($result));
 
     $client = new GuzzleHttp\Client();
-    $res = $client->request('POST', 'http://localhost/api/', [
+    $res = $client->request('POST', 'http://localhost/api/ticket', [
         // 'auth' => ['user', 'pass'],
         'json' => $result
     ]);

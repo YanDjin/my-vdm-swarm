@@ -1,8 +1,8 @@
 const Joi = require("@hapi/joi");
+const {ticketModelOptions} = require('../models/ticket');
 
 // allowed options
-const civility = {0: 'Monsieur', 1: 'Madame'};
-const simpleChoice = {0: 'Oui', 1: 'Non'};
+const {civility, simpleChoice} = ticketModelOptions;
 
 const ticketSchema = Joi.object({
     Acheteur: {

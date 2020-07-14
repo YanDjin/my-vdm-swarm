@@ -4,21 +4,29 @@ const validationMiddleware = require('../middleware/validation');
 const transformationMiddleware = require('../middleware/transformation');
 const validationSchema = require('../validation/ticket');
 const ticketTransformation = require('../transformation/ticket');
-const {TicketModel, ticketModelOptions} = require('../models/ticket');
+const {TicketModel} = require('../models/ticket');
 
 const router = express.Router();
 
 router.post("/", validationMiddleware(validationSchema), transformationMiddleware(ticketTransformation), (req, res) => {
+    // TicketModel.findOne({"Acheteur.Email": "kathryne.devyn@gogole.com"}).exec((err, ticket) => {
+    //     if (err) {
+    //         console.error(err);
+    //     }
+    //     if (ticket) {
+    //         res.status(400).json({message: 'user email exists'});
+    //     } else {
+    //         res.json({message: req.body});
+    //     }
+    // });
     const ticket = new TicketModel({
-        // _id: new mongoose.Types.ObjectId(),
         ...req.body
     });
     ticket.save().then(res => {
-        console.log(res);
+        res.json({message: 'ticket saved successfully'});
     }).catch(err => {
-        console.log(err);
+        res.status(500).json({message: "internal server error"});
     });
-    res.json({message: req.body});
 });
 
 module.exports = router;

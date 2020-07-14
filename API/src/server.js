@@ -3,13 +3,17 @@ const bodyParser = require("body-parser");
 const Joi = require("@hapi/joi");
 const mongoose = require('mongoose');
 
+require('dotenv').config(); // register env variables in the system
+
 // routes imports
-const ticketRoute = require("./routes/ticket.js");
+const ticketRoute = require("./routes/ticket");
+const registerRoute = require("./routes/register");
+const authenticateRoute = require("./routes/authenticate");
 
 const app = express();
 
 // mongodb connection
-mongoose.connect('mongodb://vdm-database:27017/vdm', {
+mongoose.connect('mongodb://vdm-database-mongos:27017/vdm', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
@@ -28,6 +32,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/ticket", ticketRoute);
+app.use("/register", registerRoute);
+app.use("/authenticate", authenticateRoute);
 
 app.listen(8000, () => {
     console.log("api is running on port 8000");

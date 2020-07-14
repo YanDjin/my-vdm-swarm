@@ -1,0 +1,11 @@
+sleep 20
+mongo --eval 'sh.addShard("shard1servers/vdm-database-shard1server1:27017,vdm-database-shard1server2:27017,vdm-database-shard1server3:27017")'
+mongo --eval 'sh.addShard("shard2servers/vdm-database-shard2server1:27017,vdm-database-shard2server2:27017,vdm-database-shard2server3:27017")'
+mongo --eval 'sh.addShard("shard3servers/vdm-database-shard3server1:27017,vdm-database-shard3server2:27017,vdm-database-shard3server3:27017")'
+mongo --eval 'db.createCollection("vdm.tickets")'
+mongo --eval 'db.createCollection("vdm.clients")'
+mongo --eval 'db.createCollection("vdm.users")'
+mongo --eval 'sh.enableSharding("vdm")'
+mongo --eval 'sh.shardCollection("vdm.tickets", { "Acheteur.Email": "hashed" })'
+mongo --eval 'sh.shardCollection("vdm.clients", { "Email": "hashed" })'
+mongo --eval 'sh.shardCollection("vdm.users", { "Email": "hashed" })'
