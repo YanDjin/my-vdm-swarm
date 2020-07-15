@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-  vdm-api:
-    container_name: vdm-api
+  vdm-api-1:
+    container_name: vdm-api-1
     build: ../api
     image: vdm-api
     command: npm start
@@ -14,8 +14,21 @@ services:
     depends_on:
       - vdm-database-mongos
 
-  vdm-front:
-    container_name: vdm-front
+  vdm-api-2:
+    container_name: vdm-api-2
+    build: ../api
+    image: vdm-api
+    command: npm start
+    volumes:
+      - ../api:/app
+      - /app/node_modules
+    ports:
+      - 8001:8000
+    depends_on:
+      - vdm-database-mongos
+
+  vdm-front-1:
+    container_name: vdm-front-1
     build: ../front
     image: vdm-front
     command: npm run serve
@@ -24,6 +37,18 @@ services:
       - /app/node_modules
     ports:
       - 8080:3000
+
+  vdm-front-2:
+    container_name: vdm-front-2
+    build: ../front
+    image: vdm-front
+    command: npm run serve
+    volumes:
+      - ../front:/app
+      - /app/node_modules
+    ports:
+      - 8081:3000
+
   #    environment:
   #      - CHOKIDAR_USEPOLLING=true
   #      - CI=true
@@ -43,8 +68,10 @@ services:
     volumes:
       - ../proxy/config:/etc/nginx/conf.d
     depends_on:
-      - vdm-api
-      - vdm-front
+      - vdm-api-1
+      - vdm-api-2
+      - vdm-front-1
+      - vdm-front-2
 
   # Database --v-- :
   #  Config servers :

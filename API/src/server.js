@@ -24,6 +24,11 @@ mongoose.connect('mongodb://vdm-database-mongos:27017/vdm', {
     console.log(err);
 });
 
+app.use((req, res, next) => {
+  console.log('--------', req, '---------');
+  next();
+});
+
 // parse body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
