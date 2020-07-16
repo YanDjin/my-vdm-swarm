@@ -12,16 +12,21 @@ const authorizationMiddleware = require('./middleware/authorization');
 
 const app = express();
 
-// mongodb connection
-mongoose.connect('mongodb://vdm-database-mongos:27017/vdm', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log('successful connection to the database');
-}).catch((err) => {
-    console.log('failed connection to the database');
-    console.log(err);
-});
+// mongodb connection function with recursive setTimeout to retry after 2sec if connection fails
+const connectToDatabase = () => {
+  console.log('trying to connect to the database');
+  mongoose.connect(process.env.NODE_MONGO_DATABASE_URL || 'mongodb://vdm-database-mongos:27017/vdm', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+  }).then(() => {
+      console.log('successful connection to the database');
+  }).catch((err) => {
+      console.log('failed connection to the database');
+      setTimeout(connectToDatabase, 2000);
+      console.log(err);
+  });
+}
+connectToDatabase();
 
 app.use((req, res, next) => {
   console.log('--------', req, '---------');
