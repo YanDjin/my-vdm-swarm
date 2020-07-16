@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const Joi = require("@hapi/joi");
 const mongoose = require('mongoose');
 
 require('dotenv').config(); // register env variables in the system

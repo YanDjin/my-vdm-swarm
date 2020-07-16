@@ -1,4 +1,4 @@
-sleep 10
+sleep 15
 mongo --eval 'rs.initiate(
   {
     _id: "shard3servers",
