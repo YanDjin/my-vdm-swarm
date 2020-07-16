@@ -108,7 +108,7 @@
 
                         <v-text-field
                           v-model="formData.Game.Nom"
-                          :rules="formRules.name"
+                          :rules="formRules.minimum"
                           label="Name"
                           required
                         ></v-text-field>
@@ -277,6 +277,10 @@
           ]
         },
         formRules: {
+          minimum: [
+            v => !!v || 'Name is required',
+            v => v.length > 3 || 'Field must be more than 3 characters',
+          ],
           name: [
             v => !!v || 'Name is required',
             v => v.length <= 10 || 'Name must be less than 10 characters',

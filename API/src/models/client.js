@@ -33,6 +33,6 @@ const schema = new mongoose.Schema({
 })
 
 module.exports = {
-  TicketModel: mongoose.model('Ticket', schema, 'tickets'),
-  ticketModelOptions: {civility, simpleChoice, tarifs}
+  ClientModel: mongoose.model('Client', schema, 'clients'),
+  clientModelOptions: {civility, simpleChoice, tarifs}
 };
