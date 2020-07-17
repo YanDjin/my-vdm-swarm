@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container>
         <HeaderBarAuthenticated/>
         <v-main
           :class="margin ? 'mt-10' : ''"
@@ -7,7 +7,7 @@
         >
             <slot></slot>
         </v-main>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -34,6 +34,11 @@
         if (this.token === null){
           this.$router.push({name: 'login'});
         }
+      }
+    },
+    created() {
+      if (this.token === null){
+        this.$router.push({name: 'login'});
       }
     }
   }

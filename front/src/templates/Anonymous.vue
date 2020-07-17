@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-container>
         <HeaderBarAnonymous/>
         <v-main
           :class="margin ? 'mt-10' : ''"
@@ -7,7 +7,7 @@
         >
             <slot></slot>
         </v-main>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -15,14 +15,14 @@
 
   export default {
     name: "Anonymous",
+    components: {
+      HeaderBarAnonymous
+    },
     props: {
       margin: {
         type: Boolean,
         default: true
       }
-    },
-    components: {
-      HeaderBarAnonymous
     },
     computed: {
       token() {
@@ -34,6 +34,11 @@
         if (this.token !== null){
           this.$router.push({name: 'dashboard'});
         }
+      }
+    },
+    created() {
+      if (this.token !== null){
+        this.$router.push({name: 'dashboard'});
       }
     }
   }

@@ -8,6 +8,7 @@ require('dotenv').config(); // register env variables in the system
 const ticketRoute = require("./routes/ticket");
 const registerRoute = require("./routes/register");
 const authenticateRoute = require("./routes/authenticate");
+const statisticsRoute = require("./routes/statistics");
 const authorizationMiddleware = require('./middleware/authorization');
 
 const app = express();
@@ -28,11 +29,6 @@ const connectToDatabase = () => {
 }
 connectToDatabase();
 
-app.use((req, res, next) => {
-  console.log('--------', req, '---------');
-  next();
-});
-
 // parse body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -45,9 +41,9 @@ app.use("/ticket", ticketRoute);
 app.use("/register", registerRoute);
 app.use("/authenticate", authenticateRoute);
 
-app.use(authorizationMiddleware());
+app.use(authorizationMiddleware()); // from this point, you must be authenticated to access the routes below
 
-app.use("/lalala", authenticateRoute);
+app.use("/statistics", statisticsRoute);
 
 app.listen(8000, () => {
     console.log("api is running on port 8000");

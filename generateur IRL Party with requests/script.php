@@ -58,13 +58,17 @@ while (true) {
     // echo(json_encode($result));
 
     $client = new GuzzleHttp\Client();
-    $res = $client->request('POST', 'http://localhost/api/ticket', [
-        // 'auth' => ['user', 'pass'],
-        'json' => $result
-    ]);
-    
-    echo($res->getStatusCode());
-    echo($res->getBody());
+    try {
+        $res = $client->request('POST', 'http://localhost/api/ticket', [
+            // 'auth' => ['user', 'pass'],
+            'json' => $result
+        ]);
+
+        echo($res->getStatusCode());
+        echo($res->getBody());
+    } catch(Exception $e) {
+        
+    }
 
     echo PHP_EOL;
     usleep($timer);

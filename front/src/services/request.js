@@ -10,7 +10,7 @@ function request(url, data, headers, method = "post") {
     let loader = this.$loading.show({
         container: null
     });
-    return axios({method, url, data}).then(res => {
+    return axios({method, url, data, headers}).then(res => {
         if (res.data && res.data.message){
             this.$toast.success(res.data.message)
         }

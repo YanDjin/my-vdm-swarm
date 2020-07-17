@@ -1,7 +1,7 @@
 const {userModelOptions} = require('../models/user');
 
-const ticketTransformation = {
+const userTransformation = {
     'Civilite': userModelOptions.civility
 }
 
-module.exports = ticketTransformation;
+module.exports = userTransformation;

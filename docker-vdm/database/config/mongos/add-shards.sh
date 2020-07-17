@@ -1,7 +1,7 @@
 sleep 30
-mongo --eval 'sh.addShard("shard1servers/vdm_vdm-database-shard1server.1:27017,vdm_vdm-database-shard1server.2:27017,vdm_vdm-database-shard1server.3:27017")'
-mongo --eval 'sh.addShard("shard2servers/vdm_vdm-database-shard2server.1:27017,vdm_vdm-database-shard2server.2:27017,vdm_vdm-database-shard2server.3:27017")'
-mongo --eval 'sh.addShard("shard3servers/vdm_vdm-database-shard3server.1:27017,vdm_vdm-database-shard3server.2:27017,vdm_vdm-database-shard3server.3:27017")'
+mongo --eval 'sh.addShard("shard1servers/vdm-database-shard1server1:27017,vdm-database-shard1server2:27017,vdm-database-shard1server3:27017")'
+mongo --eval 'sh.addShard("shard2servers/vdm-database-shard2server1:27017,vdm-database-shard2server2:27017,vdm-database-shard2server3:27017")'
+mongo --eval 'sh.addShard("shard3servers/vdm-database-shard3server1:27017,vdm-database-shard3server2:27017,vdm-database-shard3server3:27017")'
 mongo --eval 'db.createCollection("vdm.tickets")'
 mongo --eval 'db.createCollection("vdm.clients")'
 mongo --eval 'db.createCollection("vdm.users")'
