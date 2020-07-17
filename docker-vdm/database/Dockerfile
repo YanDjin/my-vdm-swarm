@@ -2,10 +2,8 @@ FROM mongo
 
 RUN apt-get update && apt install cron -y
 
-RUN mkdir /scripts
+RUN pwd
 
-COPY ./config/all/* /scripts/
+COPY ./config/scripts ./scripts
 
-RUN chmod +x /scripts/backup.sh
-
-RUN /bin/sh /scripts/add-cron.sh
+RUN chmod -R 777 ./scripts

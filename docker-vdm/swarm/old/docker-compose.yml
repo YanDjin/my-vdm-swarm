@@ -1,0 +1,127 @@
+version: "3"
+
+services:
+  vdm-api:
+    image: vdm-api
+    command: npm start
+    ports:
+      - 8000:8000
+    networks:
+      - vdm-network
+    depends_on:
+      - vdm-database-mongos
+    deploy:
+      replicas: 2
+
+  vdm-front:
+    image: vdm-front
+    command: npm run serve
+    ports:
+      - 8080:3000
+    networks:
+      - vdm-network
+    deploy:
+      replicas: 2
+
+  vdm-proxy:
+    image: vdm-proxy
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - vdm-network
+    depends_on:
+      - vdm-api
+      - vdm-front
+
+  # Database --v-- :
+  #  Config servers :
+  vdm-database-configServer:
+    image: vdm-mongo
+    command: mongod --configsvr --replSet configServers --port 27017 --dbpath /data/db
+    volumes:
+      - configServer:/data/db
+#      - ../database/backups/configServer:/backup
+#      - ../database/config/config-server:/docker-entrypoint-initdb.d/
+    networks:
+      - vdm-network
+#    placement:
+#      contraints: [node.labels.config == true]
+
+  #  Shards :
+  #  Shard 1 :
+  vdm-database-shard1server:
+    image: vdm-mongo
+    privileged: true
+    command: mongod --shardsvr --replSet shard1servers --port 27017 --dbpath /data/db
+    volumes:
+      - shard1server:/data/db
+#      - ../database/backups/shard1server:/backup
+#      - ../database/config/shard-1:/docker-entrypoint-initdb.d/
+    networks:
+      - vdm-network
+    deploy:
+      replicas: 3
+#      placement:
+#        contraints: [node.labels.shard == 1]
+
+  #  Shard 2 :
+  vdm-database-shard2server:
+    image: vdm-mongo
+    command: mongod --shardsvr --replSet shard2servers --port 27017 --dbpath /data/db
+    volumes:
+      - shard2server:/data/db
+#      - ./database/backups/shard2server:/backup
+#      - ./database/config/shard-2:/docker-entrypoint-initdb.d/
+    networks:
+      - vdm-network
+    deploy:
+      replicas: 3
+#      placement:
+#        contraints: [node.labels.shard == 2]
+
+  #  Shard 3 :
+  vdm-database-shard3server:
+    image: vdm-mongo
+    command: mongod --shardsvr --replSet shard3servers --port 27017 --dbpath /data/db
+    volumes:
+      - shard3server:/data/db
+#      - ./database/backups/shard3server:/backup
+#      - ./database/config/shard-3:/docker-entrypoint-initdb.d/
+    networks:
+      - vdm-network
+    deploy:
+      replicas: 3
+#      placement:
+#        contraints: [node.labels.shard == 3]
+
+  #  Mongos :
+  vdm-database-mongos:
+    image: vdm-mongo
+    command: sh -c "sleep 30 && mongos --configdb configServers/vdm_vdm-database-configServer.1:27017,vdm_vdm-database-configServer.2:27017,vdm_vdm-database-configServer.3:27017 --bind_ip 0.0.0.0 --port 27017"
+    ports:
+      - 27017:27017
+#    volumes:
+#      - ./database/backups/mongos:/backup
+#      - ../database/config/mongos:/docker-entrypoint-initdb.d/
+    networks:
+      - vdm-network
+    depends_on:
+      - vdm-database-configServer
+      - vdm-database-shard1server
+      - vdm-database-shard2server
+      - vdm-database-shard3server
+
+volumes:
+  configServer:
+    driver: local
+  shard1server:
+    driver: local
+  shard2server:
+    driver: local
+  shard3server:
+    driver: local
+
+networks:
+  vdm-network:
+    driver: overlay
