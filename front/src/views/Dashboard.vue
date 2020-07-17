@@ -61,6 +61,23 @@
                 </v-card>
             </v-col>
         </v-row>
+        <h1>Reservation Data</h1>
+        <vue-good-table
+          v-if="tableData.length"
+          :columns="tableFields"
+          :rows="tableData"
+          :fixed-header="true"
+          :search-options="{
+            enabled: true,
+            trigger: 'enter'
+          }"
+          :pagination-options="{
+            enabled: true,
+            perPage: 10
+          }"
+          @on-row-click="onRowClick"
+          @on-page-change="onPageChange"
+        />
     </Authenticated>
 </template>
 
@@ -70,6 +87,8 @@
     import LineChart from "../components/Charts/LineChart";
     import BarChart from "../components/Charts/BarChart";
     import PieChart from "../components/Charts/PieChart";
+    import 'vue-good-table/dist/vue-good-table.css'
+    import {VueGoodTable} from 'vue-good-table';
 
     export default {
         name: "Login",
@@ -77,7 +96,8 @@
             Authenticated,
             LineChart,
             BarChart,
-            PieChart
+            PieChart,
+            VueGoodTable
         },
         data() {
             return {
@@ -105,7 +125,19 @@
                         data: [],
                         labels: ''
                     },
-                }
+                },
+                tableFields: [
+                    {field: 'name', label: 'Client Name'},
+                    {field: 'lastName', label: 'Client Last name'},
+                    {field: 'game', label: 'Game Name'},
+                    {field: 'date', label: 'Date'},
+                    {field: 'hour', label: 'Hour'},
+                    {field: 'number', label: 'Number of reservations'},
+                    {field: 'total', label: 'Total price'},
+                ],
+                tableData: [],
+                currentPage: 1,
+                perPage: 10
             }
         },
         methods: {
@@ -116,15 +148,17 @@
                       this.tickets = res.data.tickets;
                       this.users = res.data.users;
                       this.clients = res.data.clients;
-                      this.formatDataForCharts();
+                      this.formatDataForChartsAndTable();
+                      this.$store.commit('saveReservationData', this.tickets);
                       console.log(res);
                   }).catch(err => {
                     console.error(err);
                 })
             },
-            formatDataForCharts() {
+            formatDataForChartsAndTable() {
                 this.formatDataForReservedAndEarningsPerDayChart();
                 this.formatDataForPercentageAndNumberOfPersonsPerGameChart();
+                this.prepareTableData();
             },
             formatDataForReservedAndEarningsPerDayChart() {
                 // this.chartData.reservedPerDay.globalLabels = 'This months reservations per day';
@@ -162,7 +196,8 @@
                 })
                 this.chartData.reservedPerDay.data = dataReserved;
                 this.chartData.earningsPerDay.data = dataEarnings;
-            },
+            }
+            ,
             formatDataForPercentageAndNumberOfPersonsPerGameChart() {
                 // this.chartData.numberOfPersonsPerGame.globalLabels = 'Number of persons per game';
                 // this.chartData.percentagePerGame.globalLabels = 'Repartition of reservations per game';
@@ -184,6 +219,36 @@
                 this.chartData.percentagePerGame.labels = games;
                 this.chartData.numberOfPersonsPerGame.data = numberPerGame;
                 this.chartData.percentagePerGame.data = percentagePerGame;
+            },
+            prepareTableData() {
+                let tableData = [];
+                this.tickets.forEach(ticket => {
+                    let date = new Date(ticket.Game.Jour);
+                    tableData.push({
+                        name: ticket.Acheteur.Nom,
+                        lastName: ticket.Acheteur.Prenom,
+                        game: ticket.Game.Nom,
+                        date: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
+                        hour: ticket.Game.Horaire,
+                        number: ticket.Reservation.length
+                    });
+                    tableData[tableData.length - 1]['total'] = 0;
+                    ticket.Reservation.forEach(reservation => {
+                        if (reservation.Price) {
+                            tableData[tableData.length - 1]['total'] += parseInt(reservation.Price);
+                        }
+                    })
+                    tableData[tableData.length - 1]['total'] += " €";
+                })
+                this.tableData = tableData;
+            },
+            onRowClick(params) {
+                let index = ((parseInt(this.currentPage) - 1) * parseInt(this.perPage)) + parseInt(params.pageIndex);
+                this.$router.push({name: 'reservation', params: {id: index}});
+            },
+            onPageChange(params) {
+                this.currentPage = params.currentPage;
+                console.log(params);
             }
         },
         created() {

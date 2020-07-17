@@ -1,6 +1,7 @@
 const storeObject = {
     state: {
-        token: null
+        token: null,
+        reservationData: []
     },
     mutations: {
         saveToken (state, token) {
@@ -8,6 +9,12 @@ const storeObject = {
         },
         resetToken(state) {
             state.token = null;
+        },
+        saveReservationData(state, data) {
+            state.reservationData = data;
+        },
+        resetReservationData(state) {
+            this.reservationData = [];
         }
     }
 };
